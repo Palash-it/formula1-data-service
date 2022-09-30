@@ -23,12 +23,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+	implementation 'com.auth0:java-jwt:4.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.3'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
     compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-test:2.7.3'
+	implementation 'org.springframework.security:spring-security-test:5.7.3'
 }
 
 tasks.named('test') {

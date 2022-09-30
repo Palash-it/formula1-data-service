@@ -1,1 +1,60 @@
+# Server
+server:
+  port: 8081
+  servlet:
+    contextPath: /formula1-data-service
+
+# H2 console enable and change default uri.
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-admin
+
+# Database connections config
+  datasource:
+    url: jdbc:h2:file:/var/formula1/db/formula1db
+    diverClassName: org:h2:Driver
+    username: sa
+    password:
+
+# JPA config
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: update
+
+# Internationalization Messages
+  messages:
+    basename: messages/messages
+    encoding: UTF-8
+
+# Open api and Swagger UI path
+spring-doc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /api-ui.html
+
+# Log file config
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.recommit.assignment.formula1formula1dataservice: DEBUG
+    org.hibernate: ERROR
+  file:
+    name: /var/formula1/logs/formula1-app-log.log
+
+# Application Properties
+service:
+  param:
+    jwt-config:
+      header: Authorization
+      prefix: Bearer
+      secret: PDn@RecommitEpassiAssignment2022
+      expiration: 21600000 # 6 hours in milliseconds
+
+
 

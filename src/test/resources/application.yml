@@ -1,0 +1,6 @@
+# Database connections config
+datasource:
+  url: jdbc:h2:file:jdbc:h2:file:/var/formula1/db/formula1testdb
+  diverClassName: org:h2:Driver
+  username: sa
+  password:
