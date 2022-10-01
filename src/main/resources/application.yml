@@ -41,8 +41,13 @@ spring-doc:
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
-    com.recommit.assignment.formula1formula1dataservice: DEBUG
+    org:
+      springframework:
+        web: INFO
+    com:
+      recommit:
+        assignment:
+          formula1formula1dataservice: DEBUG
     org.hibernate: ERROR
   file:
     name: /var/formula1/logs/formula1-app-log.log
@@ -55,6 +60,11 @@ service:
       prefix: Bearer
       secret: PDn@RecommitEpassiAssignment2022
       expiration: 21600000 # 6 hours in milliseconds
+
+    ergast-api:
+      baseUrl: https://ergast.com/api/
+      pagingMaxValue: 1000
+      recordPerPageDefaultLimit: 30
 
 
 

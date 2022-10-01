@@ -1,11 +1,13 @@
 package com.recommit.assignment.formula1.formula1dataservice.configurations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recommit.assignment.formula1.formula1dataservice.security.filters.UserAuthorizationTokenFilter;
 import com.recommit.assignment.formula1.formula1dataservice.security.handler.JwtAuthenticationExceptionHandler;
 import com.recommit.assignment.formula1.formula1dataservice.security.handler.UserAccessDeniedHandler;
 import com.recommit.assignment.formula1.formula1dataservice.security.handler.UserLogoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -21,9 +23,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
+import java.time.Duration;
 import java.util.Locale;
 
 @Configuration
@@ -88,5 +93,18 @@ public class WebSecurityAndBeanConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         return modelMapper;
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .setConnectTimeout(Duration.ofSeconds(10))
+                .setReadTimeout(Duration.ofSeconds(10))
+                .build();
+    }
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
     }
 }

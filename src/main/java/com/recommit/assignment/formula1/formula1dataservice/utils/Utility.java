@@ -20,4 +20,21 @@ public class Utility {
         }
         return "";
     }
+
+    /**
+     * Page no 1 or 0 both means first page
+     *
+     * @param limit
+     * @param pageNo
+     * @return
+     */
+    public static Integer getOffsetByLimitAndPageNo(Integer limit, Integer pageNo) {
+        int offset = 0;
+        if (pageNo == 0 || pageNo == 1) {
+            offset = 0;
+        } else {
+            offset = limit * (pageNo - 1);
+        }
+        return offset;
+    }
 }

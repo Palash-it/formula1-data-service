@@ -44,7 +44,7 @@ Password:
 
 Swagger API documentation can be found here: [http://localhost:8081/formula1-data-service/swagger-ui/index.html]
 
-
+To use jwt token in Swagger Authorization dont add "Bearer word manually". Swagger will add it. Just copy and paste the JWT token
 
 ### Login Credential
 username: admin

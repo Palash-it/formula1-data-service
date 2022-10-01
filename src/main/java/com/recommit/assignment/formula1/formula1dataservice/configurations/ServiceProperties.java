@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 public class ServiceProperties {
 
     private JwtConfig jwtConfig;
+    private ErgastApi ergastApi;
 
     @Data
     public static class JwtConfig {
@@ -23,5 +24,12 @@ public class ServiceProperties {
         private String prefix;
         private String secret;
         private long expiration;
+    }
+
+    @Data
+    public static class ErgastApi {
+        private String baseUrl;
+        private Integer pagingMaxValue;
+        private Integer recordPerPageDefaultLimit;
     }
 }
