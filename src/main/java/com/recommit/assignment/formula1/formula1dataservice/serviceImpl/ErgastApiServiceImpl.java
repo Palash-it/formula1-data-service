@@ -21,8 +21,12 @@ public class ErgastApiServiceImpl implements ErgastApiService {
     private final RestTemplateHelper restTemplateHelper;
 
     @Override
-    public void findAllSeasons() {
-
+    public ErgastApiResponseDTO findAllSeasons(Integer limit, Integer offset) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(serviceProperties.getErgastApi().getBaseUrl())
+                .path("f1/seasons.json")
+                .queryParam("limit", limit)
+                .queryParam("offset", offset).build("");
+        return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
     }
 
     @Override

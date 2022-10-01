@@ -3,8 +3,10 @@ package com.recommit.assignment.formula1.formula1dataservice.serviceImpl;
 import com.recommit.assignment.formula1.formula1dataservice.configurations.ServiceProperties;
 import com.recommit.assignment.formula1.formula1dataservice.converters.ErgastResponseConverter;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiResponseDTO;
+import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.SeasonDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonResponse;
 import com.recommit.assignment.formula1.formula1dataservice.service.ErgastApiService;
 import com.recommit.assignment.formula1.formula1dataservice.utils.Utility;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -37,11 +40,9 @@ public class SeasonsService {
     public SeasonFinalStandingResponse getFinalStandingsBySeason(String season, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findDriverStandingsBySeason(season, limit, offset);
-        if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
-                && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getStandingsTable().getStandingsLists())) {
+        if (!ObjectUtils.isEmpty(ergastApiResponseDTO) && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getStandingsTable().getStandingsLists())) {
             SeasonFinalStandingResponse finalStandingResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), SeasonFinalStandingResponse.class);
-            List<SeasonFinalStandingResponse.SeasonFinalStandings> seasonFinalStandings = ergastResponseConverter.convertErgastFinalStandings(ergastApiResponseDTO.getMRData()
-                    .getStandingsTable().getStandingsLists().get(0).getDriverStandings());
+            List<SeasonFinalStandingResponse.SeasonFinalStandings> seasonFinalStandings = ergastResponseConverter.convertErgastFinalStandings(ergastApiResponseDTO.getMRData().getStandingsTable().getStandingsLists().get(0).getDriverStandings());
             finalStandingResponse.setSeasonFinalStandingsList(seasonFinalStandings);
             return finalStandingResponse;
         }
@@ -59,12 +60,32 @@ public class SeasonsService {
     public RaceResponse getRacesBySeason(String season, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findAllRacesBySeason(season, limit, offset);
-        if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
-                && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
+        if (!ObjectUtils.isEmpty(ergastApiResponseDTO) && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
             RaceResponse raceResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceResponse.class);
             List<RaceResponse.Race> races = ergastResponseConverter.convertErgastRacesResponse(ergastApiResponseDTO.getMRData().getRaceTable());
             raceResponse.setRaces(races);
             return raceResponse;
+        }
+        return null;
+    }
+
+    /**
+     * Fetch all season
+     * Sort those data by season to show latest first.
+     *
+     * @param limit
+     * @param pageNo
+     * @return
+     */
+    public SeasonResponse getAllSeasons(Integer limit, Integer pageNo) {
+        Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
+        ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findAllSeasons(limit, offset);
+        if (!ObjectUtils.isEmpty(ergastApiResponseDTO) && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getSeasonTable().getSeasons())) {
+            SeasonResponse seasonResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), SeasonResponse.class);
+            List<SeasonDTO> seasons = ergastApiResponseDTO.getMRData().getSeasonTable().getSeasons();
+            Collections.reverse(seasons);
+            seasonResponse.setSeasons(seasons);
+            return seasonResponse;
         }
         return null;
     }

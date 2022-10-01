@@ -3,13 +3,13 @@ package com.recommit.assignment.formula1.formula1dataservice.controller;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.BaseResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonResponse;
 import com.recommit.assignment.formula1.formula1dataservice.serviceImpl.SeasonsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
@@ -30,9 +30,19 @@ public class SeasonsController {
     private final MessageSource messageSource;
 
     @Operation(description = "Find all seasons")
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findSeasons() {
-        return null;
+    @GetMapping()
+    public ResponseEntity<?> findSeasons(@RequestParam(required = false, defaultValue = "100") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+                                         @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
+        SeasonResponse seasonResponse = seasonsService.getAllSeasons(limit, pageNo);
+        if (!ObjectUtils.isEmpty(seasonResponse)) {
+            BaseResponse<SeasonResponse> baseResponse =
+                    new BaseResponse<>(
+                            HttpStatus.OK.value(),
+                            messageSource.getMessage("fetch.success", null, Locale.getDefault()),
+                            seasonResponse);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
 

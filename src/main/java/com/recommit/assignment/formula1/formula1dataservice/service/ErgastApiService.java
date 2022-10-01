@@ -4,7 +4,13 @@ import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiRespons
 
 public interface ErgastApiService {
 
-    void findAllSeasons();
+    /**
+     * Fetch all seasons from https://ergast.com/api/f1/seasons.json
+     * @param limit
+     * @param offset
+     * @return
+     */
+    ErgastApiResponseDTO findAllSeasons(Integer limit, Integer offset);
 
     /**
      * http://ergast.com/api/f1/2008/driverStandings.json

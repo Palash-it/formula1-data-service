@@ -25,6 +25,8 @@ public class ErgastApiResponseDTO implements Serializable {
         private ErgastStandingsTableDTO standingsTable;
         @JsonProperty("RaceTable")
         private ErgastRaceTableDTO raceTable;
+        @JsonProperty("SeasonTable")
+        private ErgastSeasonsTableDRO seasonTable;
     }
 
 }
