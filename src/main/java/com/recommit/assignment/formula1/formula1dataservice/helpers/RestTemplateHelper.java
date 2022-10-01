@@ -39,6 +39,7 @@ public class RestTemplateHelper {
         T result = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+            log.info("====[API URL: {}]====", uri);
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
             JavaType javaType = objectMapper.getTypeFactory().constructType(clazz);
             if (response.getStatusCode() == HttpStatus.OK) {

@@ -1,9 +1,6 @@
 package com.recommit.assignment.formula1.formula1dataservice.controller;
 
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.BaseResponse;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.*;
 import com.recommit.assignment.formula1.formula1dataservice.serviceImpl.SeasonsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +72,42 @@ public class SeasonsController {
                             HttpStatus.OK.value(),
                             messageSource.getMessage("fetch.success", null, Locale.getDefault()),
                             raceResponse);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(description = "Find specific race's qualifying time")
+    @GetMapping("/{season}/{round}/qualifying")
+    public ResponseEntity<?> findRaceQualifyingTime(@PathVariable(name = "season") String season,
+                                                    @PathVariable(name = "round") Integer round,
+                                                    @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+                                                    @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
+        RaceQualifyingResultResponse raceQualifyingTime = seasonsService.getRaceQualifyingTime(season, round, limit, pageNo);
+        if (!ObjectUtils.isEmpty(raceQualifyingTime)) {
+            BaseResponse<RaceQualifyingResultResponse> baseResponse =
+                    new BaseResponse<>(
+                            HttpStatus.OK.value(),
+                            messageSource.getMessage("fetch.success", null, Locale.getDefault()),
+                            raceQualifyingTime);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(description = "Find specific race's results")
+    @GetMapping("/{season}/{round}/results")
+    public ResponseEntity<?> findRaceResults(@PathVariable(name = "season") String season,
+                                             @PathVariable(name = "round") Integer round,
+                                             @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+                                             @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
+        RaceQualifyingResultResponse raceResults = seasonsService.getRaceResults(season, round, limit, pageNo);
+        if (!ObjectUtils.isEmpty(raceResults)) {
+            BaseResponse<RaceQualifyingResultResponse> baseResponse =
+                    new BaseResponse<>(
+                            HttpStatus.OK.value(),
+                            messageSource.getMessage("fetch.success", null, Locale.getDefault()),
+                            raceResults);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

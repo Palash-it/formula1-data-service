@@ -20,6 +20,11 @@ public class ErgastApiServiceImpl implements ErgastApiService {
     private final ServiceProperties serviceProperties;
     private final RestTemplateHelper restTemplateHelper;
 
+    /**
+     * @param limit
+     * @param offset
+     * @return
+     */
     @Override
     public ErgastApiResponseDTO findAllSeasons(Integer limit, Integer offset) {
         URI uri = UriComponentsBuilder.fromHttpUrl(serviceProperties.getErgastApi().getBaseUrl())
@@ -29,6 +34,12 @@ public class ErgastApiServiceImpl implements ErgastApiService {
         return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
     }
 
+    /**
+     * @param season
+     * @param limit
+     * @param offset return SeasonFinalStandingsDTO
+     * @return
+     */
     @Override
     public ErgastApiResponseDTO findDriverStandingsBySeason(String season, Integer limit, Integer offset) {
         if (!ObjectUtils.isEmpty(season)) {
@@ -42,11 +53,12 @@ public class ErgastApiServiceImpl implements ErgastApiService {
         return null;
     }
 
-    @Override
-    public void findConstructorStandingsBySeason(Integer season) {
-
-    }
-
+    /**
+     * @param season
+     * @param limit
+     * @param offset return ErgastApiResponseDTO
+     * @return
+     */
     @Override
     public ErgastApiResponseDTO findAllRacesBySeason(String season, Integer limit, Integer offset) {
         if (!ObjectUtils.isEmpty(season)) {
@@ -55,6 +67,46 @@ public class ErgastApiServiceImpl implements ErgastApiService {
                     .queryParam("limit", limit)
                     .queryParam("offset", offset)
                     .build(season);
+            return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
+        }
+        return null;
+    }
+
+    /**
+     * @param season
+     * @param raceRound
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @Override
+    public ErgastApiResponseDTO findRaceQualifyingResults(String season, Integer raceRound, Integer limit, Integer offset) {
+        if (!ObjectUtils.isEmpty(season) && !ObjectUtils.isEmpty(raceRound)) {
+            URI uri = UriComponentsBuilder.fromHttpUrl(serviceProperties.getErgastApi().getBaseUrl())
+                    .path("f1/{season}/{round}/qualifying.json")
+                    .queryParam("limit", limit)
+                    .queryParam("offset", offset)
+                    .build(season, raceRound);
+            return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
+        }
+        return null;
+    }
+
+    /**
+     * @param season
+     * @param raceRound
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @Override
+    public ErgastApiResponseDTO findRaceResults(String season, Integer raceRound, Integer limit, Integer offset) {
+        if (!ObjectUtils.isEmpty(season) && !ObjectUtils.isEmpty(raceRound)) {
+            URI uri = UriComponentsBuilder.fromHttpUrl(serviceProperties.getErgastApi().getBaseUrl())
+                    .path("f1/{season}/{round}/results.json")
+                    .queryParam("limit", limit)
+                    .queryParam("offset", offset)
+                    .build(season, raceRound);
             return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
         }
         return null;

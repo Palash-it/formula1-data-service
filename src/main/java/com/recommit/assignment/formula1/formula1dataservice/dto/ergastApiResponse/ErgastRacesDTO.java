@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,6 +18,10 @@ public class ErgastRacesDTO {
 
     @JsonProperty("Circuit")
     private CircuitDTO circuit;
+    @JsonProperty("Results")
+    private List<ErgastRaceResultsDTO> results;
+    @JsonProperty("QualifyingResults")
+    private List<ErgastRaceQualifyingResultsDTO> QualifyingResults;
 
     @Data
     @NoArgsConstructor

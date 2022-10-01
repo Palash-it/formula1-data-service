@@ -4,6 +4,7 @@ import com.recommit.assignment.formula1.formula1dataservice.configurations.Servi
 import com.recommit.assignment.formula1.formula1dataservice.converters.ErgastResponseConverter;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiResponseDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.SeasonDTO;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceQualifyingResultResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonResponse;
@@ -71,7 +72,7 @@ public class SeasonsService {
 
     /**
      * Fetch all season
-     * Sort those data by season to show latest first.
+     * Sort those data by season to show the latest first.
      *
      * @param limit
      * @param pageNo
@@ -86,6 +87,52 @@ public class SeasonsService {
             Collections.reverse(seasons);
             seasonResponse.setSeasons(seasons);
             return seasonResponse;
+        }
+        return null;
+    }
+
+    /**
+     * Find a race's qualifying time
+     * @param season
+     * @param round
+     * @param limit
+     * @param pageNo
+     * @return
+     */
+    public RaceQualifyingResultResponse getRaceQualifyingTime(String season, Integer round, Integer limit, Integer pageNo) {
+        Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
+        ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceQualifyingResults(season, round, limit, offset);
+        if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
+                && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
+            RaceQualifyingResultResponse raceQualifyingResultResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceQualifyingResultResponse.class);
+            List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> raceQualifyingData =
+                    ergastResponseConverter.convertRaceQualifyingTime(ergastApiResponseDTO.getMRData()
+                            .getRaceTable().getRaces().get(0).getQualifyingResults());
+            raceQualifyingResultResponse.setRaceQualifyingResults(raceQualifyingData);
+            return raceQualifyingResultResponse;
+        }
+        return null;
+    }
+
+    /**
+     * Fetch a race's final results
+     * @param season
+     * @param round
+     * @param limit
+     * @param pageNo
+     * @return
+     */
+    public RaceQualifyingResultResponse getRaceResults(String season, Integer round, Integer limit, Integer pageNo) {
+        Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
+        ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceResults(season, round, limit, offset);
+        if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
+                && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
+            RaceQualifyingResultResponse raceResultResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceQualifyingResultResponse.class);
+            List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> raceResultsData =
+                    ergastResponseConverter.convertRaceResultData(ergastApiResponseDTO.getMRData()
+                            .getRaceTable().getRaces().get(0).getResults());
+            raceResultResponse.setRaceQualifyingResults(raceResultsData);
+            return raceResultResponse;
         }
         return null;
     }
