@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ErgastSeasonFinalStandingsDTO implements Serializable {
+public class ErgastApiResponseDTO implements Serializable {
 
     @JsonProperty("MRData")
     private MRData mRData;
@@ -22,7 +22,9 @@ public class ErgastSeasonFinalStandingsDTO implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class MRData extends ErgastApiBaseResponse implements Serializable {
         @JsonProperty("StandingsTable")
-        private StandingsTableDTO standingsTable;
+        private ErgastStandingsTableDTO standingsTable;
+        @JsonProperty("RaceTable")
+        private ErgastRaceTableDTO raceTable;
     }
 
 }

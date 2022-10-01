@@ -1,6 +1,7 @@
 package com.recommit.assignment.formula1.formula1dataservice.controller;
 
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.BaseResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
 import com.recommit.assignment.formula1.formula1dataservice.serviceImpl.SeasonsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,11 +36,11 @@ public class SeasonsController {
     }
 
 
-    @Operation(description = "Find final findings by season")
-    @GetMapping(value = "/{season}/finalFindings")
-    public ResponseEntity<?> findSeasons(@PathVariable(name = "season") String season,
-                                         @RequestParam(required = false, defaultValue = "30") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
-                                         @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
+    @Operation(description = "Find final Standings by season")
+    @GetMapping(value = "/{season}/finalStandings")
+    public ResponseEntity<?> findFinalStandings(@PathVariable(name = "season") String season,
+                                                @RequestParam(required = false, defaultValue = "30") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+                                                @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
         SeasonFinalStandingResponse seasonFinalStandingResponse = seasonsService.getFinalStandingsBySeason(season, limit, pageNo);
         if (!ObjectUtils.isEmpty(seasonFinalStandingResponse)) {
             BaseResponse<SeasonFinalStandingResponse> baseResponse =
@@ -47,6 +48,23 @@ public class SeasonsController {
                             HttpStatus.OK.value(),
                             messageSource.getMessage("fetch.success", null, Locale.getDefault()),
                             seasonFinalStandingResponse);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(description = "Find all races by season")
+    @GetMapping(value = "/{season}/races")
+    public ResponseEntity<?> findRaces(@PathVariable(name = "season") String season,
+                                       @RequestParam(required = false, defaultValue = "30") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+                                       @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
+        RaceResponse raceResponse = seasonsService.getRacesBySeason(season, limit, pageNo);
+        if (!ObjectUtils.isEmpty(raceResponse)) {
+            BaseResponse<RaceResponse> baseResponse =
+                    new BaseResponse<>(
+                            HttpStatus.OK.value(),
+                            messageSource.getMessage("fetch.success", null, Locale.getDefault()),
+                            raceResponse);
             return new ResponseEntity<>(baseResponse, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

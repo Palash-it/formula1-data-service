@@ -1,7 +1,7 @@
 package com.recommit.assignment.formula1.formula1dataservice.serviceImpl;
 
 import com.recommit.assignment.formula1.formula1dataservice.configurations.ServiceProperties;
-import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastSeasonFinalStandingsDTO;
+import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiResponseDTO;
 import com.recommit.assignment.formula1.formula1dataservice.helpers.RestTemplateHelper;
 import com.recommit.assignment.formula1.formula1dataservice.service.ErgastApiService;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +26,14 @@ public class ErgastApiServiceImpl implements ErgastApiService {
     }
 
     @Override
-    public ErgastSeasonFinalStandingsDTO findDriverStandingsBySeason(String season, Integer limit, Integer offset) {
+    public ErgastApiResponseDTO findDriverStandingsBySeason(String season, Integer limit, Integer offset) {
         if (!ObjectUtils.isEmpty(season)) {
             URI uri = UriComponentsBuilder.fromHttpUrl(serviceProperties.getErgastApi().getBaseUrl())
                     .path("f1/{season}/driverStandings.json")
                     .queryParam("limit", limit)
                     .queryParam("offset", offset)
                     .build(season);
-            return restTemplateHelper.getForEntity(ErgastSeasonFinalStandingsDTO.class, uri);
+            return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
         }
         return null;
     }
@@ -44,7 +44,15 @@ public class ErgastApiServiceImpl implements ErgastApiService {
     }
 
     @Override
-    public void findAllRacesBySeason(Integer season) {
-
+    public ErgastApiResponseDTO findAllRacesBySeason(String season, Integer limit, Integer offset) {
+        if (!ObjectUtils.isEmpty(season)) {
+            URI uri = UriComponentsBuilder.fromHttpUrl(serviceProperties.getErgastApi().getBaseUrl())
+                    .path("f1/{season}.json")
+                    .queryParam("limit", limit)
+                    .queryParam("offset", offset)
+                    .build(season);
+            return restTemplateHelper.getForEntity(ErgastApiResponseDTO.class, uri);
+        }
+        return null;
     }
 }

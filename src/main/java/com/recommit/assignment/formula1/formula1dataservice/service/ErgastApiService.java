@@ -1,6 +1,6 @@
 package com.recommit.assignment.formula1.formula1dataservice.service;
 
-import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastSeasonFinalStandingsDTO;
+import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiResponseDTO;
 
 public interface ErgastApiService {
 
@@ -13,10 +13,11 @@ public interface ErgastApiService {
      * @param limit
      * @param offset return SeasonFinalStandingsDTO
      */
-    ErgastSeasonFinalStandingsDTO findDriverStandingsBySeason(String season, Integer limit, Integer offset);
+    ErgastApiResponseDTO findDriverStandingsBySeason(String season, Integer limit, Integer offset);
 
     /**
      * http://ergast.com/api/f1/2008/constructorStandings
+     * will implement later
      *
      * @param season
      */
@@ -24,9 +25,11 @@ public interface ErgastApiService {
 
 
     /**
-     * http://ergast.com/api/f1/2012
+     * http://ergast.com/api/f1/2012.json
      *
      * @param season
+     * @param limit
+     * @param offset return ErgastApiResponseDTO
      */
-    void findAllRacesBySeason(Integer season);
+    ErgastApiResponseDTO findAllRacesBySeason(String season, Integer limit, Integer offset);
 }

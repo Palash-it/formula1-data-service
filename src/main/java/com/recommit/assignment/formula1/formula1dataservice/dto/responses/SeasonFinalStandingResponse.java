@@ -1,7 +1,6 @@
 package com.recommit.assignment.formula1.formula1dataservice.dto.responses;
 
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiBaseResponse;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class SeasonFinalStandingResponse extends ErgastApiBaseResponse implements Serializable {
 
     private List<SeasonFinalStandings> seasonFinalStandingsList;

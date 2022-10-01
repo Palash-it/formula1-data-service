@@ -11,9 +11,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StandingsListsDTO implements Serializable {
+public class ErgastStandingsTableDTO implements Serializable {
     private Integer season;
-    private Integer round;
-    @JsonProperty("DriverStandings")
-    private List<DriverStandingsDTO> driverStandings;
+    @JsonProperty("StandingsLists")
+    private List<ErgastStandingsDTO> standingsLists;
 }
