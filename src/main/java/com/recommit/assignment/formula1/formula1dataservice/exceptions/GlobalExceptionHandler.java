@@ -48,4 +48,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(TooManyRequestException.class)
+    public final ResponseEntity<ExceptionResponse> handleTooManyRequestException(TooManyRequestException ex, WebRequest request) {
+        logger.error(ex.getMessage(), ex);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.TOO_MANY_REQUESTS.value(), ex.getMessage(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.TOO_MANY_REQUESTS);
+    }
 }

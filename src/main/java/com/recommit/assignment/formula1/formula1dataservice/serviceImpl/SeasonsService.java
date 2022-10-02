@@ -4,6 +4,7 @@ import com.recommit.assignment.formula1.formula1dataservice.converters.ErgastRes
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiResponseDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.SeasonDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.*;
+import com.recommit.assignment.formula1.formula1dataservice.exceptions.TooManyRequestException;
 import com.recommit.assignment.formula1.formula1dataservice.exceptions.UserDefinedException;
 import com.recommit.assignment.formula1.formula1dataservice.service.ErgastApiService;
 import com.recommit.assignment.formula1.formula1dataservice.service.PointsScoringSystemsService;
@@ -41,7 +42,7 @@ public class SeasonsService {
      * @return SeasonFinalStandingResponse
      */
     @Cacheable(value = "cacheFinalStandingsBySeason")
-    public SeasonFinalStandingResponse getFinalStandingsBySeason(String season, Integer limit, Integer pageNo) {
+    public SeasonFinalStandingResponse getFinalStandingsBySeason(String season, Integer limit, Integer pageNo) throws TooManyRequestException {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findDriverStandingsBySeason(season, limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO) && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getStandingsTable().getStandingsLists())) {
@@ -62,7 +63,7 @@ public class SeasonsService {
      * @return
      */
     @Cacheable(value = "cacheRacesBySeason")
-    public RaceResponse getRacesBySeason(String season, Integer limit, Integer pageNo) {
+    public RaceResponse getRacesBySeason(String season, Integer limit, Integer pageNo) throws TooManyRequestException {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findAllRacesBySeason(season, limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO) && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
@@ -83,7 +84,7 @@ public class SeasonsService {
      * @return
      */
     @Cacheable(value = "cacheAllSeasons")
-    public SeasonResponse getAllSeasons(Integer limit, Integer pageNo) {
+    public SeasonResponse getAllSeasons(Integer limit, Integer pageNo) throws TooManyRequestException {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findAllSeasons(limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO) && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getSeasonTable().getSeasons())) {
@@ -105,7 +106,7 @@ public class SeasonsService {
      * @param pageNo
      * @return
      */
-    public RaceQualifyingTimeResponse getRaceQualifyingTime(String season, Integer round, Integer limit, Integer pageNo) {
+    public RaceQualifyingTimeResponse getRaceQualifyingTime(String season, Integer round, Integer limit, Integer pageNo) throws TooManyRequestException {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceQualifyingResults(season, round, limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
@@ -130,7 +131,7 @@ public class SeasonsService {
      * @return
      */
     @Cacheable(value = "cacheRaceResults")
-    public RaceResultsResponse getRaceResults(String season, Integer round, Integer limit, Integer pageNo) {
+    public RaceResultsResponse getRaceResults(String season, Integer round, Integer limit, Integer pageNo) throws TooManyRequestException {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceResults(season, round, limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
@@ -158,7 +159,7 @@ public class SeasonsService {
      */
     @Cacheable(value = "cacheRaceResultsApplyingProvidedScoringSystem")
     public RaceResultsResponse getRaceResultsAndApplyProvidedPointsScoringSystem(
-            String season, Integer round, Integer limit, Integer pageNo, String scoringSeason) throws UserDefinedException {
+            String season, Integer round, Integer limit, Integer pageNo, String scoringSeason) throws UserDefinedException, TooManyRequestException {
         RaceResultsResponse raceResultsResponse = getRaceResults(season, round, limit, pageNo);
         if (!ObjectUtils.isEmpty(raceResultsResponse) && !ObjectUtils.isEmpty(raceResultsResponse.getRaceResults())
                 && (!ObjectUtils.isEmpty(scoringSeason) && !scoringSeason.equalsIgnoreCase(season))) {
