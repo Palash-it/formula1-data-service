@@ -1,6 +1,7 @@
 package com.recommit.assignment.formula1.formula1dataservice.controller;
 
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.*;
+import com.recommit.assignment.formula1.formula1dataservice.exceptions.UserDefinedException;
 import com.recommit.assignment.formula1.formula1dataservice.serviceImpl.SeasonsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -83,9 +84,9 @@ public class SeasonsController {
                                                     @PathVariable(name = "round") Integer round,
                                                     @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
                                                     @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
-        RaceQualifyingResultResponse raceQualifyingTime = seasonsService.getRaceQualifyingTime(season, round, limit, pageNo);
+        RaceQualifyingTimeResponse raceQualifyingTime = seasonsService.getRaceQualifyingTime(season, round, limit, pageNo);
         if (!ObjectUtils.isEmpty(raceQualifyingTime)) {
-            BaseResponse<RaceQualifyingResultResponse> baseResponse =
+            BaseResponse<RaceQualifyingTimeResponse> baseResponse =
                     new BaseResponse<>(
                             HttpStatus.OK.value(),
                             messageSource.getMessage("fetch.success", null, Locale.getDefault()),
@@ -101,9 +102,9 @@ public class SeasonsController {
                                              @PathVariable(name = "round") Integer round,
                                              @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
                                              @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
-        RaceQualifyingResultResponse raceResults = seasonsService.getRaceResults(season, round, limit, pageNo);
+        RaceResultsResponse raceResults = seasonsService.getRaceResults(season, round, limit, pageNo);
         if (!ObjectUtils.isEmpty(raceResults)) {
-            BaseResponse<RaceQualifyingResultResponse> baseResponse =
+            BaseResponse<RaceResultsResponse> baseResponse =
                     new BaseResponse<>(
                             HttpStatus.OK.value(),
                             messageSource.getMessage("fetch.success", null, Locale.getDefault()),
@@ -113,4 +114,24 @@ public class SeasonsController {
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
+    @Operation(description = "Apply any points scoring system from list")
+    @PostMapping("/{season}/{round}/apply-points-scoring-system")
+    public ResponseEntity<?> applyPointsScoringSystemOnRaceResults(
+            @PathVariable(name = "season") String season,
+            @PathVariable(name = "round") Integer round,
+            @RequestParam(name = "scoringSeason", required = false) String scoringSeason,
+            @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer pageNo) throws UserDefinedException {
+
+        RaceResultsResponse raceResults = seasonsService.getRaceResultsAndApplyProvidedPointsScoringSystem(season, round, limit, pageNo, scoringSeason);
+        if (!ObjectUtils.isEmpty(raceResults)) {
+            BaseResponse<RaceResultsResponse> baseResponse =
+                    new BaseResponse<>(
+                            HttpStatus.OK.value(),
+                            messageSource.getMessage("fetch.success", null, Locale.getDefault()),
+                            raceResults);
+            return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
 }

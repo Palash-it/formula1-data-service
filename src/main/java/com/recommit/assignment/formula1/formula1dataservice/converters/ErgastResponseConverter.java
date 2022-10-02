@@ -4,8 +4,9 @@ import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiRespons
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastRaceQualifyingResultsDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastRaceResultsDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastRaceTableDTO;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceQualifyingResultResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceQualifyingTimeResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResultsResponse;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -79,10 +80,10 @@ public class ErgastResponseConverter {
      * @param QualifyingResults
      * @return
      */
-    public List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> convertRaceQualifyingTime(List<ErgastRaceQualifyingResultsDTO> QualifyingResults) {
-        List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> raceQualifyingResultList =
+    public List<RaceQualifyingTimeResponse.RaceQualifyingTimeDTO> convertRaceQualifyingTime(List<ErgastRaceQualifyingResultsDTO> QualifyingResults) {
+        List<RaceQualifyingTimeResponse.RaceQualifyingTimeDTO> raceQualifyingResultList =
                 QualifyingResults.stream().map(raceQualify -> {
-                    RaceQualifyingResultResponse.RaceQualifyingResultDTO raceQualifyingDTO = new RaceQualifyingResultResponse.RaceQualifyingResultDTO();
+                    RaceQualifyingTimeResponse.RaceQualifyingTimeDTO raceQualifyingDTO = new RaceQualifyingTimeResponse.RaceQualifyingTimeDTO();
                     raceQualifyingDTO.setDriverFamilyName(raceQualify.getDriver().getFamilyName());
                     raceQualifyingDTO.setDriverGivenName(raceQualify.getDriver().getGivenName());
                     raceQualifyingDTO.setQ1(raceQualify.getQ1());
@@ -100,16 +101,17 @@ public class ErgastResponseConverter {
      * @param raceResultsDTOList
      * @return
      */
-    public List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> convertRaceResultData(List<ErgastRaceResultsDTO> raceResultsDTOList) {
-        List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> raceQualifyingResultList =
+    public List<RaceResultsResponse.RaceResultsDTO> convertRaceResultData(List<ErgastRaceResultsDTO> raceResultsDTOList) {
+        List<RaceResultsResponse.RaceResultsDTO> raceQualifyingResultList =
                 raceResultsDTOList.stream().map(raceResult -> {
-                    RaceQualifyingResultResponse.RaceQualifyingResultDTO raceResultDTO = new RaceQualifyingResultResponse.RaceQualifyingResultDTO();
+                    RaceResultsResponse.RaceResultsDTO raceResultDTO = new RaceResultsResponse.RaceResultsDTO();
                     raceResultDTO.setDriverFamilyName(raceResult.getDriver().getFamilyName());
                     raceResultDTO.setDriverGivenName(raceResult.getDriver().getGivenName());
                     raceResultDTO.setPoints(raceResult.getPoints());
                     raceResultDTO.setPosition(raceResult.getPosition());
                     raceResultDTO.setStatus(raceResult.getStatus());
                     raceResultDTO.setTime(!ObjectUtils.isEmpty(raceResult.getTime()) ? raceResult.getTime().getTime() : "");
+                    raceResultDTO.setFastestLapRank(!ObjectUtils.isEmpty(raceResult.getFastestLap()) ? raceResult.getFastestLap().getRank() : null);
 
                     return raceResultDTO;
                 }).collect(Collectors.toCollection(LinkedList::new));

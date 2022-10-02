@@ -1,14 +1,12 @@
 package com.recommit.assignment.formula1.formula1dataservice.serviceImpl;
 
-import com.recommit.assignment.formula1.formula1dataservice.configurations.ServiceProperties;
 import com.recommit.assignment.formula1.formula1dataservice.converters.ErgastResponseConverter;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.ErgastApiResponseDTO;
 import com.recommit.assignment.formula1.formula1dataservice.dto.ergastApiResponse.SeasonDTO;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceQualifyingResultResponse;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.RaceResponse;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonFinalStandingResponse;
-import com.recommit.assignment.formula1.formula1dataservice.dto.responses.SeasonResponse;
+import com.recommit.assignment.formula1.formula1dataservice.dto.responses.*;
+import com.recommit.assignment.formula1.formula1dataservice.exceptions.UserDefinedException;
 import com.recommit.assignment.formula1.formula1dataservice.service.ErgastApiService;
+import com.recommit.assignment.formula1.formula1dataservice.service.PointsScoringSystemsService;
 import com.recommit.assignment.formula1.formula1dataservice.utils.Utility;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,7 +25,7 @@ public class SeasonsService {
     private static final Logger logger = LoggerFactory.getLogger(SeasonsService.class);
     private final ErgastApiService ergastApiService;
     private final ErgastResponseConverter ergastResponseConverter;
-    private final ServiceProperties serviceProperties;
+    private final PointsScoringSystemsService pointsScoringSystemsService;
     private final ModelMapper modelMapper;
 
     /**
@@ -93,22 +91,23 @@ public class SeasonsService {
 
     /**
      * Find a race's qualifying time
+     *
      * @param season
      * @param round
      * @param limit
      * @param pageNo
      * @return
      */
-    public RaceQualifyingResultResponse getRaceQualifyingTime(String season, Integer round, Integer limit, Integer pageNo) {
+    public RaceQualifyingTimeResponse getRaceQualifyingTime(String season, Integer round, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceQualifyingResults(season, round, limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
                 && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
-            RaceQualifyingResultResponse raceQualifyingResultResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceQualifyingResultResponse.class);
-            List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> raceQualifyingData =
+            RaceQualifyingTimeResponse raceQualifyingResultResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceQualifyingTimeResponse.class);
+            List<RaceQualifyingTimeResponse.RaceQualifyingTimeDTO> raceQualifyingData =
                     ergastResponseConverter.convertRaceQualifyingTime(ergastApiResponseDTO.getMRData()
                             .getRaceTable().getRaces().get(0).getQualifyingResults());
-            raceQualifyingResultResponse.setRaceQualifyingResults(raceQualifyingData);
+            raceQualifyingResultResponse.setRaceQualifyingTime(raceQualifyingData);
             return raceQualifyingResultResponse;
         }
         return null;
@@ -116,24 +115,50 @@ public class SeasonsService {
 
     /**
      * Fetch a race's final results
+     *
      * @param season
      * @param round
      * @param limit
      * @param pageNo
      * @return
      */
-    public RaceQualifyingResultResponse getRaceResults(String season, Integer round, Integer limit, Integer pageNo) {
+    public RaceResultsResponse getRaceResults(String season, Integer round, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceResults(season, round, limit, offset);
         if (!ObjectUtils.isEmpty(ergastApiResponseDTO)
                 && !ObjectUtils.isEmpty(ergastApiResponseDTO.getMRData().getRaceTable().getRaces())) {
-            RaceQualifyingResultResponse raceResultResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceQualifyingResultResponse.class);
-            List<RaceQualifyingResultResponse.RaceQualifyingResultDTO> raceResultsData =
+            RaceResultsResponse raceResultResponse = modelMapper.map(ergastApiResponseDTO.getMRData(), RaceResultsResponse.class);
+            List<RaceResultsResponse.RaceResultsDTO> raceResultsData =
                     ergastResponseConverter.convertRaceResultData(ergastApiResponseDTO.getMRData()
                             .getRaceTable().getRaces().get(0).getResults());
-            raceResultResponse.setRaceQualifyingResults(raceResultsData);
+            raceResultResponse.setRaceResults(raceResultsData);
             return raceResultResponse;
         }
         return null;
     }
+
+    /**
+     * Fetch race results from Ergast API and apply a new points scoring system which provided by user
+     * If new scoring season is null or same as data source season then skip re-calculation
+     *
+     * @param season        which season race will be fetched
+     * @param round
+     * @param limit
+     * @param pageNo
+     * @param scoringSeason which season's points scoring system will be applied
+     * @return
+     */
+    public RaceResultsResponse getRaceResultsAndApplyProvidedPointsScoringSystem(
+            String season, Integer round, Integer limit, Integer pageNo, String scoringSeason) throws UserDefinedException {
+        RaceResultsResponse raceResultsResponse = getRaceResults(season, round, limit, pageNo);
+        if (!ObjectUtils.isEmpty(raceResultsResponse) && !ObjectUtils.isEmpty(raceResultsResponse.getRaceResults())
+                && (!ObjectUtils.isEmpty(scoringSeason) && !scoringSeason.equalsIgnoreCase(season))) {
+            logger.info("====[Race results found. Go for applying a new scoring]====");
+            List<RaceResultsResponse.RaceResultsDTO> resultsAfterApplyingPointsScoringSystem =
+                    pointsScoringSystemsService.applyScoringSystem(raceResultsResponse.getRaceResults(), scoringSeason);
+            raceResultsResponse.setRaceResults(resultsAfterApplyingPointsScoringSystem);
+        }
+        return raceResultsResponse;
+    }
+
 }

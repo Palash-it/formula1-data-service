@@ -50,3 +50,6 @@ To use jwt token in Swagger Authorization dont add "Bearer word manually". Swagg
 username: admin
 password: admin
 
+### World Championship points scoring systems supported
+Please have a look JSON File into classpath: points-scoring-system.json to find which seasons scoring system are supported by this application
+

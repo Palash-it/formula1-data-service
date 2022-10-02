@@ -11,21 +11,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class RaceQualifyingResultResponse extends ErgastApiBaseResponse implements Serializable {
+public class RaceQualifyingTimeResponse extends ErgastApiBaseResponse implements Serializable {
 
-    private List<RaceQualifyingResultDTO> raceQualifyingResults;
+    private List<RaceQualifyingTimeDTO> raceQualifyingTime;
 
     @Data
     @NoArgsConstructor
-    public static class RaceQualifyingResultDTO {
+    public static class RaceQualifyingTimeDTO {
         private String driverGivenName;
         private String driverFamilyName;
         private String Q1;
         private String Q2;
         private String Q3;
-        private String position;
-        private String time;
-        private String status;
-        private Integer points;
     }
 }

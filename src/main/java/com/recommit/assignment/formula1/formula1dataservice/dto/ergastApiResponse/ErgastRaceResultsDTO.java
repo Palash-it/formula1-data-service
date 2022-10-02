@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class ErgastRaceResultsDTO {
     private String position;
     private Integer number;
-    private Integer points;
+    private Float points;
     @JsonProperty("Driver")
     private DriverDTO driver;
     @JsonProperty("Constructor")
@@ -21,5 +21,14 @@ public class ErgastRaceResultsDTO {
     private String status;
     @JsonProperty("Time")
     private RaceFinishTime time;
+    @JsonProperty("FastestLap")
+    private FastestLap FastestLap;
+
+    @Data
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class FastestLap {
+        private Integer rank;
+    }
 
 }
