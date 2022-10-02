@@ -1,6 +1,5 @@
 package com.recommit.assignment.formula1.formula1dataservice.configurations;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recommit.assignment.formula1.formula1dataservice.security.filters.UserAuthorizationTokenFilter;
 import com.recommit.assignment.formula1.formula1dataservice.security.handler.JwtAuthenticationExceptionHandler;
 import com.recommit.assignment.formula1.formula1dataservice.security.handler.UserAccessDeniedHandler;
@@ -8,6 +7,8 @@ import com.recommit.assignment.formula1.formula1dataservice.security.handler.Use
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -107,4 +108,5 @@ public class WebSecurityAndBeanConfig {
     public MethodValidationPostProcessor methodValidationPostProcessor() {
         return new MethodValidationPostProcessor();
     }
+
 }

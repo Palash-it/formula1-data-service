@@ -12,17 +12,21 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class SeasonsService {
 
     private static final Logger logger = LoggerFactory.getLogger(SeasonsService.class);
+    static Map<String, Object> dataStore = new HashMap<>();
     private final ErgastApiService ergastApiService;
     private final ErgastResponseConverter ergastResponseConverter;
     private final PointsScoringSystemsService pointsScoringSystemsService;
@@ -36,6 +40,7 @@ public class SeasonsService {
      * @param season
      * @return SeasonFinalStandingResponse
      */
+    @Cacheable(value = "cacheFinalStandingsBySeason")
     public SeasonFinalStandingResponse getFinalStandingsBySeason(String season, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findDriverStandingsBySeason(season, limit, offset);
@@ -56,6 +61,7 @@ public class SeasonsService {
      * @param pageNo
      * @return
      */
+    @Cacheable(value = "cacheRacesBySeason")
     public RaceResponse getRacesBySeason(String season, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findAllRacesBySeason(season, limit, offset);
@@ -76,6 +82,7 @@ public class SeasonsService {
      * @param pageNo
      * @return
      */
+    @Cacheable(value = "cacheAllSeasons")
     public SeasonResponse getAllSeasons(Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findAllSeasons(limit, offset);
@@ -122,6 +129,7 @@ public class SeasonsService {
      * @param pageNo
      * @return
      */
+    @Cacheable(value = "cacheRaceResults")
     public RaceResultsResponse getRaceResults(String season, Integer round, Integer limit, Integer pageNo) {
         Integer offset = Utility.getOffsetByLimitAndPageNo(limit, pageNo);
         ErgastApiResponseDTO ergastApiResponseDTO = ergastApiService.findRaceResults(season, round, limit, offset);
@@ -148,6 +156,7 @@ public class SeasonsService {
      * @param scoringSeason which season's points scoring system will be applied
      * @return
      */
+    @Cacheable(value = "cacheRaceResultsApplyingProvidedScoringSystem")
     public RaceResultsResponse getRaceResultsAndApplyProvidedPointsScoringSystem(
             String season, Integer round, Integer limit, Integer pageNo, String scoringSeason) throws UserDefinedException {
         RaceResultsResponse raceResultsResponse = getRaceResults(season, round, limit, pageNo);

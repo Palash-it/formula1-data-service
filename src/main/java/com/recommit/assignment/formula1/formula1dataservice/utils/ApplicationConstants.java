@@ -9,4 +9,6 @@ public class ApplicationConstants {
     public static final String CLAIM_USERID = "userId";
     public static final String CLAIM_USERNAME = "username";
     public static final String CLAIM_IP_ADDRESS = "requestOriginIpAddress";
+
+    public static final Integer SEASON_STARTED_FROM = 1950;
 }

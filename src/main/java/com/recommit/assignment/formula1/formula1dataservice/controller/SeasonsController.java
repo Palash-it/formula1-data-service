@@ -3,9 +3,11 @@ package com.recommit.assignment.formula1.formula1dataservice.controller;
 import com.recommit.assignment.formula1.formula1dataservice.dto.responses.*;
 import com.recommit.assignment.formula1.formula1dataservice.exceptions.UserDefinedException;
 import com.recommit.assignment.formula1.formula1dataservice.serviceImpl.SeasonsService;
+import com.recommit.assignment.formula1.formula1dataservice.utils.ApplicationConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
+import java.time.LocalDate;
 import java.util.Locale;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,9 +32,9 @@ public class SeasonsController {
 
     @Operation(description = "Find all seasons")
     @GetMapping()
-    public ResponseEntity<?> findSeasons(@RequestParam(required = false, defaultValue = "100") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
-                                         @RequestParam(required = false, defaultValue = "0") Integer pageNo) {
-        SeasonResponse seasonResponse = seasonsService.getAllSeasons(limit, pageNo);
+    public ResponseEntity<?> findSeasons() {
+        int limit = LocalDate.now().getYear() - ApplicationConstants.SEASON_STARTED_FROM + 1;
+        SeasonResponse seasonResponse = seasonsService.getAllSeasons(limit, 1);
         if (!ObjectUtils.isEmpty(seasonResponse)) {
             BaseResponse<SeasonResponse> baseResponse =
                     new BaseResponse<>(

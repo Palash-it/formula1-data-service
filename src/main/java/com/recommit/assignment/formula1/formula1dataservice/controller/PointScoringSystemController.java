@@ -5,6 +5,7 @@ import com.recommit.assignment.formula1.formula1dataservice.dto.responses.BaseRe
 import com.recommit.assignment.formula1.formula1dataservice.serviceImpl.PositionalPointsScoringSystem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class PointScoringSystemController {
     private final PositionalPointsScoringSystem positionalPointsScoringSystem;
     private final MessageSource messageSource;
 
+    @Cacheable(value = "cachePointsScoringSystems")
     @GetMapping()
     public ResponseEntity<?> getAllPointsScoringSystem() {
         ScoringSystemProperty scoringSystemProperty = positionalPointsScoringSystem.getScoringSystemProperty();
