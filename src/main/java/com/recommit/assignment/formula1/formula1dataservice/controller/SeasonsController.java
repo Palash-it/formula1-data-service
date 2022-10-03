@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +50,7 @@ public class SeasonsController {
 
 
     @Operation(description = "Find final Standings by season")
-    @GetMapping(value = "/{season}/finalStandings")
+    @PostMapping(value = "/{season}/finalStandings")
     public ResponseEntity<?> findFinalStandings(@PathVariable(name = "season") String season,
                                                 @RequestParam(required = false, defaultValue = "30") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
                                                 @RequestParam(required = false, defaultValue = "0") Integer pageNo) throws TooManyRequestException {
@@ -66,9 +67,10 @@ public class SeasonsController {
     }
 
     @Operation(description = "Find all races by season")
-    @GetMapping(value = "/{season}/races")
+    @PostMapping(value = "/{season}/races")
     public ResponseEntity<?> findRaces(@PathVariable(name = "season") String season,
-                                       @RequestParam(required = false, defaultValue = "30") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
+                                       @RequestParam(required = false, defaultValue = "30")
+                                       @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
                                        @RequestParam(required = false, defaultValue = "0") Integer pageNo) throws TooManyRequestException {
         RaceResponse raceResponse = seasonsService.getRacesBySeason(season, limit, pageNo);
         if (!ObjectUtils.isEmpty(raceResponse)) {
@@ -83,7 +85,7 @@ public class SeasonsController {
     }
 
     @Operation(description = "Find specific race's qualifying time")
-    @GetMapping("/{season}/{round}/qualifying")
+    @PostMapping("/{season}/{round}/qualifying")
     public ResponseEntity<?> findRaceQualifyingTime(@PathVariable(name = "season") String season,
                                                     @PathVariable(name = "round") Integer round,
                                                     @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
@@ -101,7 +103,7 @@ public class SeasonsController {
     }
 
     @Operation(description = "Find specific race's results")
-    @GetMapping("/{season}/{round}/results")
+    @PostMapping("/{season}/{round}/results")
     public ResponseEntity<?> findRaceResults(@PathVariable(name = "season") String season,
                                              @PathVariable(name = "round") Integer round,
                                              @RequestParam(required = false, defaultValue = "50") @Max(value = 1000, message = "Maximum limit must be less than 1000") Integer limit,
@@ -119,7 +121,7 @@ public class SeasonsController {
     }
 
     @Operation(description = "Apply any points scoring system from list")
-    @PostMapping("/{season}/{round}/apply-points-scoring-system")
+    @PostMapping(value = "/{season}/{round}/apply-points-scoring-system")
     public ResponseEntity<?> applyPointsScoringSystemOnRaceResults(
             @PathVariable(name = "season") String season,
             @PathVariable(name = "round") Integer round,
