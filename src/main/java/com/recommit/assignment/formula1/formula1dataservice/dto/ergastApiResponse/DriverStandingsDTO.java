@@ -14,7 +14,7 @@ import java.util.List;
 public class DriverStandingsDTO implements Serializable {
     private Integer position;
     private String positionText;
-    private Integer points;
+    private Float points;
     private Integer wins;
     @JsonProperty("Driver")
     private DriverDTO driver;

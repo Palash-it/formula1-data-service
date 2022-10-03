@@ -31,9 +31,6 @@ public class SeasonsController {
     private final SeasonsService seasonsService;
     private final MessageSource messageSource;
 
-    @Autowired
-
-
     @Operation(description = "Find all seasons")
     @GetMapping()
     public ResponseEntity<?> findSeasons() throws TooManyRequestException {

@@ -65,8 +65,8 @@ public class ErgastResponseConverter {
 
                     raceResponse.setLocality(race.getCircuit().getLocation().getLocality());
                     raceResponse.setCountry(race.getCircuit().getLocation().getCountry());
-                    raceResponse.setDate(race.getCircuit().getDate());
-                    raceResponse.setTime(race.getCircuit().getTime());
+                    raceResponse.setDate(race.getDate());
+                    raceResponse.setTime(race.getTime());
 
                     return raceResponse;
                 }).collect(Collectors.toCollection(LinkedList::new));

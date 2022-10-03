@@ -22,6 +22,8 @@ public class ErgastRacesDTO {
     private List<ErgastRaceResultsDTO> results;
     @JsonProperty("QualifyingResults")
     private List<ErgastRaceQualifyingResultsDTO> QualifyingResults;
+    private String date;
+    private String time;
 
     @Data
     @NoArgsConstructor
@@ -33,8 +35,6 @@ public class ErgastRacesDTO {
         private String circuitName;
         @JsonProperty("Location")
         private Location location;
-        private String date;
-        private String time;
 
         @Data
         @NoArgsConstructor

@@ -22,7 +22,7 @@ public class SeasonFinalStandingResponse extends ErgastApiBaseResponse implement
 
         private String driverGivenName;
         private String driverFamilyName;
-        private Integer points;
+        private Float points; //for some season i found points are decimal
 
         private String constructorName;
         private String constructorNationality;

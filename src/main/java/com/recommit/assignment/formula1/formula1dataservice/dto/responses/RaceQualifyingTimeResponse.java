@@ -20,8 +20,8 @@ public class RaceQualifyingTimeResponse extends ErgastApiBaseResponse implements
     public static class RaceQualifyingTimeDTO {
         private String driverGivenName;
         private String driverFamilyName;
-        private String Q1;
-        private String Q2;
-        private String Q3;
+        private String q1;
+        private String q2;
+        private String q3;
     }
 }

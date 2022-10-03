@@ -18,16 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class SeasonsService {
 
     private static final Logger logger = LoggerFactory.getLogger(SeasonsService.class);
-    static Map<String, Object> dataStore = new HashMap<>();
     private final ErgastApiService ergastApiService;
     private final ErgastResponseConverter ergastResponseConverter;
     private final PointsScoringSystemsService pointsScoringSystemsService;
