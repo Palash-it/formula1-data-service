@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping(value = "/token")
     @Operation(summary = "Authenticate and get JWT Token")
     public ResponseEntity<?> loginAndGenerateToken(@RequestBody AuthenticationRequest authenticationRequest) {
-        log.info("====[User login and token generate request received]=====");
+        log.info("====[User login and token generate request received]=====Username:{}", authenticationRequest.getUsername());
         AuthenticationResponse authenticationResponse = userSecurityService.loginAndGenerateToken(authenticationRequest);
         return ResponseEntity.ok().body(authenticationResponse);
     }

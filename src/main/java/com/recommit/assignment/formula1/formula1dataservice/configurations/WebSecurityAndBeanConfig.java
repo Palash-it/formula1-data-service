@@ -42,7 +42,8 @@ public class WebSecurityAndBeanConfig {
             "/swagger-ui/**",
             "/api-docs/**",
             "/api/v1/auth/**",
-            "/h2-admin/**"
+            "/h2-admin/**",
+            "/api/v1/points-scoring-system"
     };
     private final UserLogoutHandler userLogoutHandler;
     private final UserAccessDeniedHandler accessDeniedHandler;

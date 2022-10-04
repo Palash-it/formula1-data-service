@@ -31,5 +31,6 @@ public class ServiceProperties {
         private String baseUrl;
         private Integer pagingMaxValue;
         private Integer recordPerPageDefaultLimit;
+        private String scoringSystemJson;
     }
 }

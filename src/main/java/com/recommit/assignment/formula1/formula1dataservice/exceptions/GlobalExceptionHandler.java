@@ -35,21 +35,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public final ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
         logger.error(ex.getMessage(), ex);
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.FORBIDDEN.value(), ex.getMessage(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public final ResponseEntity<ExceptionResponse> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
         logger.error(ex.getMessage(), ex);
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TooManyRequestException.class)
-    public final ResponseEntity<ExceptionResponse> handleTooManyRequestException(TooManyRequestException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleTooManyRequestException(TooManyRequestException ex, WebRequest request) {
         logger.error(ex.getMessage(), ex);
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.TOO_MANY_REQUESTS.value(), ex.getMessage(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.TOO_MANY_REQUESTS);

@@ -8,6 +8,12 @@ import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 
+/**
+ * This class is tightly coupled to read the json file. I would like to refactor this class to read json file from
+ * external resource by properties file.
+ * Now this class is hard to test
+ */
+
 public class PointScoringReaderHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(PointScoringReaderHelper.class.getName());

@@ -65,6 +65,7 @@ service:
       baseUrl: https://ergast.com/api/
       pagingMaxValue: 1000
       recordPerPageDefaultLimit: 30
+      scoringSystemJson: points-scoring-system.json
 
 
 
